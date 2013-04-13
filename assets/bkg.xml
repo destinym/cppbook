@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<bkgs>
+	<bkg>
+	  <id>999</id>	
+		<lable>默认</lable>	
+		<name>bkg5.png</name>	
+	</bkg>
+  <bkg>
+	  <id>1000</id>	
+		<lable>默认</lable>	
+		<name>bkg0.png</name>	
+	</bkg>
+	<bkg>
+	  <id>1001</id>	
+		<lable>默认</lable>	
+		<name>bkg1.png</name>	
+	</bkg>
+	<bkg>
+	  <id>1002</id>	
+		<lable>默认</lable>	
+		<name>bkg2.png</name>	
+	</bkg>
+	<bkg>
+	  <id>1003</id>	
+		<lable>默认</lable>	
+		<name>bkg3.png</name>	
+	</bkg>
+	<bkg>
+	  <id>1004</id>	
+		<lable>默认</lable>	
+		<name>bkg4.png</name>	
+	</bkg>
+</bkgs>

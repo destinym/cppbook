@@ -32,7 +32,7 @@ public class BookPageFactory {
 
 	private Vector<String> m_lines = new Vector<String>();
 
-	private int m_fontSize = 32;
+	private int m_fontSize = 28;
 	private int m_textColor = Color.BLACK;
 	private int m_backColor = 0xffff9e85; // 背景颜色
 	private int marginWidth = 15; // 左右与边缘的距离
@@ -305,4 +305,38 @@ public class BookPageFactory {
 	public boolean islastPage() {
 		return m_islastPage;
 	}
+	
+    public void setColor(int color)
+    {
+    	m_textColor = color;
+    	mPaint.setColor(m_textColor);
+    }
+    
+    
+    public int getColor()
+    {
+    	return m_textColor;
+    }
+    
+  
+    public void setTextSize(int textSize)
+    {
+    	m_fontSize = textSize;
+    	mPaint.setTextSize(textSize);
+    	mLineCount = (int) (mVisibleHeight / m_fontSize); // 可显示的行数
+		m_lines.clear();
+		//pageUp();
+		m_lines = pageDown();
+    }
+    
+    public void getoFirstPage()
+    {
+		m_lines.clear();
+		//m_mbBufBegin = m_mbBufEnd;
+		m_mbBufBegin = 0;
+		m_mbBufEnd = 0;
+		m_lines = pageDown();
+    }
+    
+
 }
