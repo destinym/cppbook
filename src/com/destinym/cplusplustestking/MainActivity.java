@@ -6,17 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.CharBuffer;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-
-import javax.crypto.Cipher;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
-import javax.crypto.spec.IvParameterSpec;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -77,56 +66,7 @@ public class MainActivity extends Activity implements
  public void onCreate(Bundle savedInstanceState) {
      super.onCreate(savedInstanceState);
      setContentView(R.layout.activity_main);
-     
-     Cipher a;
-     
-  // 从原始密匙数据创建一个DESKeySpec对象  
-     byte[] key = null;
-     DESKeySpec dks = null;
-	try {
-		dks = new DESKeySpec(key);
-	} catch (InvalidKeyException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}  
 
-     // 创建一个密匙工厂，然后用它把DESKeySpec对象转换成  
-
-     // 一个SecretKey对象  
-
-     SecretKeyFactory keyFactory = null;
-	try {
-		keyFactory = SecretKeyFactory.getInstance("DES");
-	} catch (NoSuchAlgorithmException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}  
-     SecretKey paramSecretKey = null;
-	try {
-		paramSecretKey = keyFactory.generateSecret(dks);
-	} catch (InvalidKeySpecException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}  ;
-     IvParameterSpec localIvParameterSpec = new IvParameterSpec(new byte[] { -114, 18, 57, -100, 7, 114, 111, 90 });
-
-     
-     try {
-    	 a = Cipher.getInstance("DES/CBC/PKCS5Padding");
-		a.init(1, paramSecretKey, localIvParameterSpec);
-	} catch (InvalidKeyException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (InvalidAlgorithmParameterException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (NoSuchAlgorithmException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (NoSuchPaddingException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
      mUri = getIntent().getData();
      
      mScrollView = (ScrollView) findViewById(R.id.text_show_scroll);
