@@ -1,0 +1,1051 @@
+99  MFC中SendMessage和PostMessage的区别？
+答：PostMessage 和SendMessage的区别主要在于是否等待应用程序做出消息处理。PostMessage只是把消息放入队列，然后继续执行；而SendMessage必须等待应用程序处理消息后才返回继续执行。这两个函数的返回值也不同，PostMessage的返回值表示PostMessage函数执行是否正确，而SendMessage的返回值表示其他程序处理消息后的返回值。
+202．改错
+#include
+#include
+class CBuffer
+{
+char * m_pBuffer;
+int m_size;
+public:
+CBuffer()
+{
+m_pBuffer=NULL;
+}
+~CBuffer()
+{
+Free();
+}
+void Allocte(int size) （3） {
+m_size=size;
+m_pBuffer= new char[size];
+}
+private:
+void Free()
+{
+if(m_pBuffer!=NULL)
+{
+delete m_pBuffer;
+m_pBuffer=NULL;
+}
+}
+public:
+void SaveString(const char* pText) const
+{
+strcpy(m_pBuffer, pText);
+}
+char* GetBuffer() const
+{
+return m_pBuffer;
+}
+};
+
+void main (int argc, char* argv[])
+{
+CBuffer buffer1;
+buffer1.SaveString(“Microsoft”);
+printf(buffer1.GetBuffer());
+}
+
+答：改正后
+主要改正SaveString函数
+将
+void SaveString(const char* pText) const
+{
+strcpy(m_pBuffer, pText);
+}
+改为
+void SaveString(const char* pText) （1）
+{
+Allocte(strlen(pText)+1); （2）
+strcpy(m_pBuffer, pText);
+}
+原因：
+（1） const成员函数表示不会修改数据成员，而SaveString做不到，去掉const声明
+（2） m_pBuffer指向NULL，必须用Allocte分配空间才能赋值。
+（3） 另外需要将Allocte成员函数声明为私有成员函数更符合实际
+
+203.下来程序想打印“Welcome MSR Asia”，改正错误
+#include
+#include
+char * GetName (void)
+{
+//To return “MSR Asia” String
+char name[]=”MSR Asia”;
+return name;
+}
+void main(int argc, char* argv[])
+{
+char name[32];
+//Fill in zeros into name
+for(int i=0;i<=32;i++)
+{
+name[i]=’\0′;
+}
+//copy “Welcome” to name
+name=”Welcome”;
+//Append a blank char
+name[8]=” “;
+//Append string to name
+strcat(name,GetName());
+//print out
+printf(name);
+}
+
+答：改正后为
+#include
+#include
+char * GetName (void)
+{
+//To return “MSR Asia” String
+//char name[]=”MSR Asia”; （1）
+char *name=(char *)malloc(strlen(“MSR Asia”)+1);
+strcpy(name,”MSR Asia”);
+return name;
+}
+void main(int argc, char* argv[])
+{
+char name[32];
+//Fill in zeros into name
+for(int i=0;i<=32;i++)
+{
+name[i]=’\0′;
+}
+//copy “Welcome” to name
+//name=”Welcome”; （2）
+strcat(name,”Welcome “);
+//Append a blank char
+// name[8]=’ ‘; （3）
+//Append string to name
+char *p=GetName(); （4）
+strcat(name,p);
+free (p);
+//print out
+printf(name);
+}
+原因：（1）在函数内部定义的变量在函数结束时就清空了，必须动态分配内存
+（2）字符串赋值语句错误，应该用strcat
+（3）该语句无效，可去掉
+（4）定义一个指针指向动态分配的内存，用完后需用free语句释放
+
+ 
+
+ 
+
+204．写出下面程序的输出结果
+#include
+class A
+{
+public:
+void FuncA()
+{
+printf(“FuncA called\n”);
+}
+virtual void FuncB()
+{
+printf(“FuncB called\n”);
+}
+};
+
+class B: public A
+{
+public:
+void FuncA()
+{
+A::FuncA();
+printf(“FuncAB called\n”);
+}
+virtual void FuncB()
+{
+printf(“FuncBB called\n”);
+}
+};
+
+void main(void)
+{
+B b;
+A *pa;
+pa=&b;
+A *pa2=new A;
+b.FuncA(); （1）
+b.FuncB(); （2）
+pa->FuncA(); （3）
+pa->FuncB(); （4）
+pa2->FuncA(); （5）
+pa2->FuncB();
+delete pa2;
+}
+答：
+1．b.FuncA(); 输出
+FuncA called
+FuncAB called
+2．b.FuncB();输出
+FuncBB called
+上两者好理解，直接调用类B的相应成员函数
+3．pa->FuncA();输出
+FuncA called 调用类A的FuncA()
+4．pa->FuncB();输出
+FuncBB called调用类B的FuncB()，原因是C++的动态决议机制，当基类函数声明为virtual时，指向派生类对象的基类指针来调用该函数会选择派生类的实现，除非派生类没有才调用基类的虚函数。还有一点注意的是：指向基类类型的指针可以指向基类对象也可以指向派生类对象，如pa=&b;
+5. pa2->FuncA();
+pa2->FuncB();输出
+FuncA called
+FuncB called
+这也好理解，直接调用类A的相应成员函数
+
+206．In the main() function, after ModifyString(text) is called, what’s the value of ‘text’?
+#include
+#include
+int FindSubString(char* pch)
+{
+int count=0;
+char* p1=pch;
+while(*p1!=’\0′)
+{
+if(*p1==p1[1]-1)
+{
+p1++;
+count++;
+}
+else
+{
+break;
+}
+}
+int count2=count;
+while(*p1!=’\0′)
+{
+if(*p1==p1[1]+1)
+{
+p1++;
+count2–;
+}
+else
+{
+break;
+}
+}
+if(count2==0)
+return count;
+return 0;
+}
+
+void ModifyString(char* pText)
+{
+char* p1=pText;
+char* p2=p1;
+while(*p1!=’\0′)
+{
+int count=FindSubString(p1);
+if(count>0)
+{
+*p2++=*p1;
+sprintf(p2, “%I”, count);
+while(*p2!= ‘\0′)
+{
+p2++;
+}
+p1+=count+count+1;
+}
+else
+{
+*p2++=*p1++;
+}
+}
+}
+void main(void)
+{
+char text[32]=”XYBCDCBABABA”;
+ModifyString(text);
+printf(text);
+}
+答：我不知道这个结构混乱的程序到底想考察什么，只能将最后运行结果写出来是XYBCDCBAIBAAP
+
+ 
+
+207. Programming (Mandatory)
+Linked list
+a. Implement a linked list for integers,which supports the insertafter (insert a node after a specified node) and removeafter (remove the node after a specified node) methods;
+b. Implement a method to sort the linked list to descending order.
+答：题目的意思是实现一个整型链表，支持插入，删除操作（有特殊要求，都是在指定节点后进行操作），并写一个对链表数据进行降序排序的方法。
+那我们不妨以一个线性链表进行编程。
+// 单链表结构体为
+typedef struct LNode
+{
+int data;
+struct LNode *next;
+}LNode, *pLinkList;
+
+// 单链表类
+class LinkList
+{
+private:
+pLinkList m_pList;
+int m_listLength;
+public:
+LinkList();
+~LinkList();
+bool InsertAfter(int afternode, int data);//插入
+bool RemoveAfter(int removenode);//删除
+void sort();//排序
+};
+
+实现方法
+//insert a node after a specified node
+bool LinkList::InsertAfter(int afternode, int data)
+{
+LNode *pTemp = m_pList;
+int curPos = -1;
+if (afternode > m_listLength ) // 插入点超过总长度
+{
+return false;
+}
+while (pTemp != NULL) // 找到指定的节点
+{
+curPos++;
+if (curPos == afternode)
+break;
+pTemp = pTemp->next;
+}
+if (curPos != afternode) // 节点未寻到，错误退出
+{
+return false;
+}
+LNode *newNode = new LNode; // 将新节点插入指定节点后
+newNode->data = data;
+newNode->next = pTemp->next;
+pTemp->next = newNode;
+m_listLength++;
+return true;
+}
+
+//remove the node after a specified node
+bool LinkList::RemoveAfter(int removenode)
+{
+LNode *pTemp = m_pList;
+int curPos=-1;
+if (removenode > m_listLength) // 删除点超过总长度
+{
+return false;
+}
+
+// 找到指定的节点后一个节点，因为删除的是后一个节点
+while (pTemp != NULL)
+{
+curPos++;
+if (curPos == removenode+1)
+break;
+pTemp = pTemp->next;
+}
+if (curPos != removenode) // 节点未寻到，错误退出
+{
+return false;
+}
+LNode *pDel = NULL; // 删除节点
+pDel = pTemp->next;
+pTemp->next = pDel->next;
+delete pDel;
+m_listLength–;
+return true;
+}
+
+//sort the linked list to descending order.
+void LinkList::sort()
+{
+if (m_listLength<=1)
+{
+return;
+}
+LNode *pTemp = m_pList;
+int temp;
+// 选择法排序
+for(int i=0;i<M_LISTLENGTH-1;I++)
+for(int j=i+1;j<M_LISTLENGTH;J++)
+if (pTemp[i].data<PTEMP[J].DATA)
+{
+temp=pTemp[i].data;
+pTemp[i].data=pTemp[j].data;
+pTemp[j].data=temp;
+}
+}
+前两个函数实现了要求a，后一个函数sort()实现了要求b
+
+ 
+
+208. Debugging (Mandatory)
+a. For each of the following recursive methods, enter Y in the answer box if the method terminaters (assume i=5), Otherwise enter N.
+（题目意思：判断下面的递归函数是否可以结束）
+static int f(int i){
+return f(i-1)*f(i-1);
+}
+Ansewr: N,明显没有返回条件语句，无限递归了
+
+static int f(int i){
+if(i==0){return 1;}
+else {return f(i-1)*f(i-1);}
+}
+Ansewr:Y，当i＝0时可结束递归
+
+static int f(int i){
+if(i==0){return 1;}
+else {return f(i-1)*f(i-2);}
+}
+Ansewr:N，因为i=1时，f(i-2)=f(-1),进入一个无限递归中
+
+ 
+
+ 
+
+209．编程
+将整数转换成字符串：void itoa(int,char);
+例如itoa(-123,s[])则s=“-123”;
+答：
+char* itoa(int value, char* string)
+{
+char tmp[33];
+char* tp = tmp;
+int i;
+unsigned v;
+char* sp;
+// 将值转为正值
+if (value < 0)
+v = -value;
+else
+v = (unsigned)value;
+// 将数转换为字符放在数组tmp中
+while (v)
+{
+i = v % 10;
+v = v / 10;
+*tp++ = i+’0′;
+}
+// 将tmp里的字符填入string指针里，并加上负号（如果有）
+sp = string;
+if (value < 0)
+*sp++ = ‘-’;
+while (tp > tmp)
+*sp++ = *–tp;
+*sp = 0;
+return string;
+}
+
+ 
+
+ 
+
+210.完成下列程序
+*
+*.*.
+*..*..*..
+*…*…*…*…
+*….*….*….*….*….
+*…..*…..*…..*…..*…..*…..
+*……*……*……*……*……*……*……
+*…….*…….*…….*…….*…….*…….*…….*…….
+#include
+#define N 8
+int main()
+{
+int i;
+int j;
+int k;
+———————————————————
+│ │
+│ │
+│ │
+———————————————————
+return 0;
+}
+答：#define N 8
+int main()
+{
+int i;
+int j;
+int k;
+
+for(i=0;i<N;I++)
+{
+for(j=0;j<I+1;J++)
+{
+printf(“*”);
+for(k=0;k<I;K++)
+printf(“.”);
+}
+printf(“\n”);
+}
+return 0;
+}
+
+211．下列程序运行时会崩溃，请找出错误并改正，并且说明原因。
+#include “stdio.h”
+#include “malloc.h”
+typedef struct TNode
+{
+TNode* left;
+TNode* right;
+int value;
+}TNode;
+
+TNode* root=NULL;
+void append(int N);
+
+int main()
+{
+append(63);
+append(45);
+append(32);
+append(77);
+append(96);
+append(21);
+append(17); // Again, 数字任意给出
+return 0;
+}
+
+void append(int N)
+{
+TNode* NewNode=(TNode *)malloc(sizeof(TNode));
+NewNode->value=N;
+NewNode->left=NULL; //新增
+NewNode->right=NULL; //新增
+if(root==NULL)
+{
+root=NewNode;
+return;
+}
+else
+{
+TNode* temp;
+temp=root;
+while((N>=temp->value && temp->left!=NULL)||(Nvalue && temp-
+
+>right!=NULL))
+{
+while(N>=temp->value && temp->left!=NULL)
+temp=temp->left;
+while(Nvalue && temp->right!=NULL)
+temp=temp->right;
+}
+if(N>=temp->value)
+temp->left=NewNode;
+else
+temp->right=NewNode;
+return;
+}
+}
+
+答：因为新节点的左右指针没有赋NULL值，至使下面的while循环不能正确结束而导致内存越界，最后崩溃（注意结束条件是temp->left!=NULL或temp->right!=NULL）。改正就是增加两条赋值语句，如上文红色部分字体就是新增的两条语句。
+
+ 
+
+ 
+
+ 
+
+212.打印如下图案，共19行，只能有一个for循环（题目已经提供）
+* 
+*** 
+***** 
+******* 
+********* 
+***********
+************* 
+*************** 
+ ***************** 
+*******************
+ ***************** 
+*************** 
+************* 
+*********** 
+********* 
+******* 
+***** 
+*** 
+* 
+for(i=0;i<19;i++)
+{
+
+}
+答：
+#include “stdio.h”
+void main()
+{
+for(int i=0;i<19;i++)
+{
+int j=0;
+while (j<19)
+{
+if (i<=9)
+{
+if (j<=9)
+{
+if (i+j>=9)
+printf(“*”);
+else
+printf(” “);
+}
+else
+if (j-i<=9)
+printf(“*”);
+else
+printf(” “);
+}
+else
+{
+if (j<=9)
+{
+if (i-j<=9)
+printf(“*”);
+else
+printf(” “);
+}
+else
+if (j+i<=27)
+printf(“*”);
+else
+printf(” “);
+}
+j++;
+}
+printf(“\n”);
+}
+}
+
+213.stack data （栈）存在于
+A.rom, B .flash C .eeprom D.ram E .none of the above
+答：D.ram。这题稍微涉及到一点硬件知识，ROM的全称是Read Only Memory，即只读存储器，flash ，eeprom都是ROM家族的一员，RAM是Random Access Memory的简称，意为随机存取存储器，也就是内存了。不管是堆还是栈都是放在内存里的。
+
+214.
+int i;
+int x=0×12345678;
+unsigned char *p=(unsigned char *)&x;
+for(i=0;i<SIZEOF(X);I++)
+printf(“%2x”,*(p+i));
+在80x86pc机器上运行结果？
+答：x在PC机上的内存存放顺序为78 56 34 12，高字节在前，低字节在后，因此输出78563412
+Sun Sparc Unix上运行结果？
+
+ 
+
+215.
+char a[2][2][3]={{{1,6,3},{5,4,15}},{{3,5,33},{23,12,7}} };
+for(int i=0;i<12;i++)
+printf(“%d “,_______);
+在空格处填上合适的语句，顺序打印出a中的数字
+答：*(*(*(a+i/6)+(i/3%2))+i%3)
+这题主要是要将输出的序号依次写出一些，如000,001,002,010,011,012,100,101…然后找序号变化规律
+
+216.请用标准C语言实现一个双向循环链表的查找与删除。
+typedef struct doublecyclelink{
+int key;
+struct doublecyclelink *prev;
+struct doublecyclelink *next;
+}DoubleCycleLinkT;
+DoubleCycleLinkT *findKey(DoubleCycleLinkT *link,int key);
+遍历整个双向循环链表，将第一个与key值相同的结点移出链表，并返回。
+若没有找到则返回NULL。
+
+答：
+函数为
+DoubleCycleLinkT *findKey(DoubleCycleLinkT *link,int key)
+{
+DoubleCycleLinkT *p;
+p=link->next;
+while (p->next!=link) // 链表结尾
+{
+if (p->key==key) // 查找到key值相同,删除该节点,并返回
+{
+p->prev->next=p->next;
+p->next->prev=p->prev;
+free(p);
+return link;
+}
+else
+p=p->next; // 否则查找下一节点
+}
+if (p->next == link) return NULL; //没找到，返回NULL
+
+}
+
+217、请用标准C语言实现下列标准库函数，设计中不得使用其他库函数。
+char *strstr(char *str1,char *str2);
+在字符串str1中，寻找字串str2，若找到返回找到的位置，否则返回NULL。
+答：
+函数为
+char * strstr ( const char * str1, const char * str2 )
+{
+char *cp = (char *) str1;
+char *s1, *s2;
+if ( !*str2 )
+return((char *)str1);
+while (*cp)
+{
+s1 = cp;
+s2 = (char *) str2;
+while ( *s1 && *s2 && !(*s1-*s2) )
+s1++, s2++;
+if (!*s2)
+return(cp);
+cp++;
+}
+return(NULL);
+}
+
+ 
+
+218.实现双向链表删除一个节点P，在节点P后插入一个节点，写出这两个函数;
+答：
+假设线性表的双向链表存储结构
+typedef struct DulNode{
+struct DulNode *prior; //前驱指针
+ElemType data; //数据
+struct DulNode *next; //后继指针
+}DulNode,*DuLinkList;
+删除操作
+Status ListDelete_DuL(DuLinkList &L,int i,ElemType &e)
+{
+if(!(p=GetElemP_DuL(L,i)))
+return ERROR;
+e=p->data;
+p->prior->next=p->next;
+p->next->prior=p->pror;
+free(p);
+return OK;
+}
+插入操作
+Status ListInsert_DuL(DuLinkList &L,int i,ElemType &e)
+{
+if(!(p=GetElemP_DuL(L,i)))
+return ERROR;
+if(!(s=(DuLinkList)malloc(sizeof(DuLNode))))
+return ERROR;
+
+s->data=e;
+s->prior=p->prior;
+p->prior->next=s;
+s->next=p;
+p->prior=s;
+return OK;
+}
+
+219.写一个函数，将其中的\t都转换成4个空格。
+答：
+该函数命名为convert,参数的意义为：
+*strDest目的字符串,*strSrc源字符串,length源字符串的长度
+函数实现为：
+char* convert(char *strDest, const char *strSrc,int length)
+{
+char * cp = strDest;
+int i=0;
+while(*strSrc && i
+{
+if (*strSrc==’\t’) //将\t转换成4个空格
+{
+for(int j=0;j<4;j++)
+*cp++=’ ‘;
+}
+else //否则直接拷贝
+*cp++=*strSrc;
+strSrc++;
+i++;
+}
+return strDest;
+}
+
+230.Windows程序的入口是哪里？写出Windows消息机制的流程。
+答：
+Windows程序的入口是WinMain函数
+消息机制：系统将会维护一个或多个消息队列，所有产生的消息都会被放入或是插入队列中。系统会在队列中取出每一条消息，根据消息的接收句柄而将该消息发送给拥有该窗口的程序的消息循环。每一个运行的程序都有自己的消息循环，在循环中得到属于自己的消息并根据接收窗口的句柄调用相应的窗口过程。而在没有消息时消息循环就将控制权交给系统。
+
+231.如何定义和实现一个类的成员函数为回调函数？
+答：
+所谓的回调函数，就是预先在系统的对函数进行注册，让系统知道这个函数的存在，以后，当某个事件发生时，再调用这个函数对事件进行响应。
+定义一个类的成员函数时在该函数前加CALLBACK即将其定义为回调函数，函数的实现和普通成员函数没有区别
+
+ 
+
+232.C++里面是不是所有的动作都是main()引起的？如果不是，请举例。
+答：不是，比如中断引起的中断处理不是直接由main()引起的，而是由外部事件引起的。
+
+233.C++里面如何声明const void f(void)函数为C程序中的库函数
+答：在该函数前添加extern “C”声明
+
+234. 内联函数在编译时是否做参数类型检查
+答：做类型检查，因为内联函数就是在程序编译时，编译器将程序中出现的内联函数的调用表达式用内联函数的函数体来代替。
+235．请你详细地解释一下IP协议的定义，在哪个层上面？主要有什么作用？TCP与UDP呢？
+答：IP是Internet Protocol的简称，是网络层的主要协议，作用是提供不可靠、无连接的数据报传送。TCP是Transmit Control Protocol（传输控制协议）的缩写，在运输层，TCP提供一种面向连接的，可靠的字节流服务；UDP是User Datagram Protocol（用户数据报协议）的缩写，在运输层，UDP提供不可靠的传输数据服务
+
+236．请问交换机和路由器各自的实现原理是什么？分别在哪个层次上面实现的？
+答：交换机属于ＯＳＩ第二层即数据链路层设备。它根据ＭＡＣ地址寻址，通过站表选择路由，站表的建立和维护由交换机自动进行。路由器属于ＯＳＩ第三层即网络层设备，它根据ＩＰ地址进行寻址，通过路由表路由协议产生。交换机最大的好处是快速，路由器最大的好处是控制能力强。
+
+237．全局变量和局部变量有什么区别？是怎么实现的？操作系统和编译器是怎么知道的？
+答：一些变量在整个程序中都是可见的，它们称为全局变量。一些变量只能在一个函数中可知，称为局部变量。这就是他们的区别。
+在任何函数外面定义的变量就是全局变量，在函数内部定义的变量是局部变量，这是它们在程序中的实现过程。
+操作系统和编译器是根据程序运行的内存区域知道他们的，程序的全局数据放在所分配内存的全局数据区，程序的局部数据放在栈区。
+
+238. 有两个文件a.txt,b.txt.a.txt中存储的是aaaaaa，b.txt中存储的是bbb。将两个文件合并成c.txt如果是a并b的话存储为abababaaa.要是b并a   的话就是bababaaaa.用c语言编程实现。
+
+#include   “stdio.h”
+
+void   fmerge(FILE   *fa,FILE   *fb,FILE   *fc)
+
+{
+
+char   cha,chb;
+
+cha=fgetc(fa);
+
+chb=fgetc(fb);
+
+while   ((cha!=EOF)&&(chb!=EOF))
+
+{
+
+fputc(cha,fc);
+
+fputc(chb,fc);
+
+cha=fgetc(fa);
+
+chb=fgetc(fb);
+
+}
+
+while   (cha!=EOF)
+
+{
+
+fputc(cha,fc);
+
+cha=fgetc(fa);
+
+}
+
+while   (chb!=EOF)
+
+{
+
+fputc(chb,fc);
+
+chb=fgetc(fb);
+
+}
+
+}
+
+int   main()
+
+{
+
+FILE   *fa,*fb,*fc;
+
+fa=fopen(“a.txt”,”r”);
+
+fb=fopen(“b.txt”,”r”);
+
+fc=fopen(“c.txt”,”w”);
+
+fmerge(fa,fb,fc);
+
+fclose(fa);
+
+fclose(fb);
+
+fclose(fc);
+
+return   0;
+
+}
+
+ 
+
+ 
+
+239.C++:memset ,memcpy 和strcpy 的根本区别？
+#include “memory.h”
+memset用来对一段内存空间全部设置为某个字符，一般用在对定义的字符串进行初始化为‘ ‘或‘\0′；例:char a[100];memset(a, ‘\0′, sizeof(a));
+memcpy用来做内存拷贝，你可以拿它拷贝任何数据类型的对象，可以指定拷贝的数据长度；例：char a[100],b[50]; memcpy(b, a, sizeof(b));注意如用sizeof(a)，会造成b的内存地址溢出。
+
+strcpy就只能拷贝字符串了，它遇到’\0′就结束拷贝；例：char a[100],b[50];strcpy(a,b);如用strcpy(b,a)，要注意a中的字符串长度（第一个‘\0′之前）是否超过50位，如超过，则会造成b的内存地址溢出。
+
+strcpy
+原型：extern char *strcpy(char *dest,char *src);
+用法：#include
+功能：把src所指由NULL结束的字符串复制到dest所指的数组中。
+说明：src和dest所指内存区域不可以重叠且dest必须有足够的空间来容纳src的字符串。
+返回指向dest的指针。
+memcpy
+原型：extern void *memcpy(void *dest, void *src, unsigned int count);
+用法：#include
+功能：由src所指内存区域复制count个字节到dest所指内存区域。
+说明：src和dest所指内存区域不能重叠，函数返回指向dest的指针。
+memset
+原型：extern void *memset(void *buffer, char c, int count);
+用法：#include
+功能：把buffer所指内存区域的前count个字节设置成字符c。
+说明：返回指向buffer的指针。
+
+240.ASSERT()是干什么用的
+
+ASSERT() 是一个调试程序时经常使用的宏，在程序运行时它计算括号内的表达式，如果表达式为FALSE (0), 程序将报告错误，并终止执行。如果表达式不为0，则继续执行后面的语句。这个宏通常原来判断程序中是否出现了明显非法的数据，如果出现了终止程序以免导致 严重后果，同时也便于查找错误。例如，变量n在程序中不应该为0，如果为0可能导致错误，你可以这样写程序：
+……
+ASSERT( n != 0);
+k = 10/ n;
+……
+ASSERT只有在Debug版本中才有效，如果编译为Release版本则被忽略。
+assert()的功能类似，它是ANSI C标准中规定的函数，它与ASSERT的一个重要区别是可以用在Release版本中。
+
+241. 二分查找算法：
+1、递归方法实现：
+int BSearch(elemtype a[],elemtype x,int low,int high)
+/*在下届为low，上界为high的数组a中折半查找数据元素x*/
+{
+int mid;
+if(low>high) return -1;
+mid=(low+high)/2;
+if(x==a[mid]) return mid;
+if(x<a[mid]) return(BSearch(a,x,low,mid-1));
+else return(BSearch(a,x,mid+1,high));
+}
+
+2、非递归方法实现：
+int BSearch(elemtype a[],keytype key,int n)
+{
+int low,high,mid;
+low=0;high=n-1;
+while(low<=high)
+{
+mid=(low+high)/2;
+if(a[mid].key==key) return mid;
+else if(a[mid].key<key) low=mid+1;
+else high=mid-1;
+}
+return -1;
+}
+
+ 
+
+ 
+
+242，写出下面代码段的输出结果，并说明理由:
+
+char str1[] = “abc”;
+char str2[] = “abc”;
+
+const char str3[] = “abc”;
+const char str4[] = “abc”;
+
+const char *str5 = “abc”;
+const char *str6 = “abc”;
+
+char *str7 = “abc”;
+char *str8 = “abc”;
+
+cout << ( str1 == str2 ) << endl;
+cout << ( str3 == str4 ) << endl;
+cout << ( str5 == str6 ) << endl;
+cout << ( str7 == str8 ) << endl;
+
+1，  str1,str2,str3,str4是数组变量，它们有各自的内存空间；
+而str5,str6,str7,str8是指针，它们指向相同的常量区域。
+
+243. 以下代码中的两个sizeof用法有问题吗？
+void UpperCase( char str[] )
+
+{
+for( size_t i=0; i<sizeof(str)/sizeof(str[0]); ++i )
+if( ‘a’<=str[i] && str[i]<=’z’ )
+str[i] -= (‘a’-'A’ );
+}
+char str[] = “aBcDe”;
+cout << “str字符长度为: ” << sizeof(str)/sizeof(str[0]) << endl;
+UpperCase( str );
+cout << str << endl;
+
+函数内的sizeof有问题。根据语法，sizeof如用于数组，只能测出静态数组的大小，无法检测动态分配的或外部数组大小。函数外的str是一个静态定义的数组，因此其大小为6，函数内的str实际只是一个指向字符串的指针，没有任何额外的与数组相关的信息，因此sizeof作用于上只将其当指针看，
+
+244，下面程序输出结果是多少:
+
+main()
+{
+int a[5]={1,2,3,4,5};
+int *ptr=(int *)(&a+1);
+
+   printf(“%d,%d”,*(a+1),*(ptr-1));
+}
+2,5
+*(a+1）就是a[1]，*(ptr-1)就是a[4],执行结果是2，5
+&a+1不是首地址+1，系统会认为加一个a数组的偏移，是偏移了一个数组的大小（本例是5个int）
+int *ptr=(int *)(&a+1);
+则ptr实际是&(a[5]),也就是a+5
+原因如下：
+&a是数组指针，其类型为 int (*)[5];
+而指针加1要根据指针类型加上一定的值，
+不同类型的指针+1之后增加的大小不同
+a是长度为5的int数组指针，所以要加 5*sizeof(int)
+所以ptr实际是a[5]
+但是prt与(&a+1)类型是不一样的(这点很重要)
+所以prt-1只会减去sizeof(int*)
+a,&a的地址是一样的，但意思不一样，a是数组首地址，也就是a[0]的地址，&a是对象（数组）首地址，a+1是数组下一元素的地址，即a[1],&a+1是下一个对象的地址，即a[5].
+
+ 
+
+245，请问运行Test函数会有什么样的结果？
+void GetMemory(char *p)
+{
+p = (char *)malloc(100);
+}
+void Test(void)
+{
+char *str = NULL;
+GetMemory(str);
+strcpy(str, “hello world”);
+printf(str);
+}
+
+ 
+
+ 
+
+，请问运行Test函数会有什么样的结果？
+char *GetMemory(void)
+{
+char p[] = “hello world”;
+return p;
+}
+void Test(void)
+{
+char *str = NULL;
+str = GetMemory();
+printf(str);
+}
+
+ 
+
+，请问运行Test函数会有什么样的结果？
+Void GetMemory2(char **p, int num)
+{
+*p = (char *)malloc(num);
+}
+void Test(void)
+{
+char *str = NULL;
+GetMemory(&str, 100);
+strcpy(str, “hello”);
+printf(str);
+}
+
+ 
+
+ 
+
+，请问运行Test函数会有什么样的结果？
+void Test(void)
+{
+char *str = (char *) malloc(100);
+strcpy(str, “hello”);
+free(str);
+if(str != NULL)
+{
+strcpy(str, “world”);
+printf(str);
+}
+}
