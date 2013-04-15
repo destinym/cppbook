@@ -6,7 +6,15 @@
 	<uses-sdk
 		android:minSdkVersion="4"
 		android:targetSdkVersion="15" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 	<application
 		android:icon="@drawable/ic_launcher"
@@ -17,11 +25,83 @@
 			android:label="@string/title_activity_main" >
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
+
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+
+		<!-- AdView SDK for AdChina -->
+		<activity
+			android:name="com.adchina.android.ads.views.AdBrowserView"
+			android:configChanges="orientation|keyboard|keyboardHidden"
+			android:theme="@android:style/Theme.Translucent" />
+
+
+		<!-- AdView SDK for AppMedia -->
+		<activity android:name="cn.appmedia.ad.AdActivity" >
+		</activity>
+
+		<!-- AdView SDK for Baidu -->
+		<activity
+			android:name="com.baidu.mobads.AppActivity"
+			android:configChanges="keyboard|keyboardHidden|orientation" />
+
+		<meta-data
+			android:name="BaiduMobAd_DEBUG_TOKEN"
+			android:value="adview" />
+
+
+
+		<!-- AdView SDK for Youmi -->
+		<activity
+			android:name="net.youmi.android.AdBrowser"
+			android:configChanges="keyboard|keyboardHidden|orientation"
+			android:theme="@android:style/Theme.NoTitleBar" >
+		</activity>
+
+		<service android:name="net.youmi.android.AdService" >
+		</service>
+
+		<receiver android:name="net.youmi.android.AdReceiver" >
+			<intent-filter>
+				<action android:name="android.intent.action.PACKAGE_ADDED" />
+				<action android:name="android.intent.action.PACKAGE_INSTALL" />
+
+				<data android:scheme="package" />
+			</intent-filter>
+		</receiver>
+
+		<!-- AdView SDK for greystripe -->
 		
-		
+		<!--
+          supported markets are as follows:
+        EOE(优亿市场)
+        GOOGLEMARKET(谷歌电子市场)
+        APPCHINA(应用汇)
+        HIAPK(安卓市场)
+        GFAN(机锋)
+        GOAPK(安智)
+        NDUOA(N多网)
+        91Store(手机91)
+        LIQUCN(历趣)
+        WAPTW(天网)
+        ANDROIDCN(安卓中国)
+        GGDWON(G友网)
+        ANDROIDAI(安卓之家)
+        STARANDROID(安卓星空)
+        ANDROIDD(安致)
+        YINGYONGSO(应用搜)
+        IMOBILE(手机之家)
+        SOUAPP(搜应用)
+        MUMAYI(木蚂蚁)
+        MOBIOMNI(欧米)
+        PAOJIAO(泡椒网)
+        AIBALA(爱扒拉市场)
+        COOLAPK(酷安网)
+        ANFONE(安丰)
+        APKOK(乐致网) 
+		-->
+
 	</application>
 
 </manifest>

@@ -19,7 +19,7 @@ import android.widget.Scroller;
 public class PageWidget extends View {
 
 	private int mWidth = 480;
-	private int mHeight = 800;
+	private int mHeight = 700;
 	private int mCornerX = 0; // 拖拽点对应的页脚
 	private int mCornerY = 0;
 	private Path mPath0;
