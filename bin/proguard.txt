@@ -1,0 +1,27 @@
+# view AndroidManifest.xml #generated:79
+-keep class cn.domob.android.ads.DomobActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:40
+-keep class com.adchina.android.ads.views.AdBrowserView { <init>(...); }
+
+# view AndroidManifest.xml #generated:46
+-keep class com.baidu.mobads.AppActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:24
+-keep class com.destinym.cplusplustestking.MainActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:37
+-keep class com.kyview.AdviewWebView { <init>(...); }
+
+# view AndroidManifest.xml #generated:35
+-keep class com.kyview.DownloadService { <init>(...); }
+
+# view AndroidManifest.xml #generated:60
+-keep class net.youmi.android.AdBrowser { <init>(...); }
+
+# view AndroidManifest.xml #generated:69
+-keep class net.youmi.android.AdReceiver { <init>(...); }
+
+# view AndroidManifest.xml #generated:66
+-keep class net.youmi.android.AdService { <init>(...); }
+

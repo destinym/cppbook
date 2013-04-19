@@ -244,7 +244,7 @@ public class BookPageFactory {
 				e.printStackTrace();
 			}
 		}
-		m_mbBufEnd = m_mbBufBegin;
+		//m_mbBufEnd = m_mbBufBegin;
 		return;
 	}
 
@@ -257,7 +257,9 @@ public class BookPageFactory {
 			m_isfirstPage = false;
 		}
 		m_lines.clear();
+		
 		pageUp();
+		m_mbBufEnd = m_mbBufBegin;
 		m_lines = pageDown();
 	}
 

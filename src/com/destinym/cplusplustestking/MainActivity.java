@@ -3,19 +3,29 @@ package com.destinym.cplusplustestking;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import net.youmi.android.YoumiAdManager;
-import net.youmi.android.banner.AdSize;
-import net.youmi.android.banner.AdView;
+import java.util.ArrayList;
+import java.util.List;
 
+
+//import net.youmi.android.YoumiAdManager;
+//import net.youmi.android.banner.AdSize;
+//import net.youmi.android.banner.AdView;
+//import net.youmi.android.banner.AdViewLinstener;
+
+import com.adchina.android.ads.AdManager;
+import com.adchina.android.ads.views.AdView;
 import com.kyview.AdViewInterface;
 import com.kyview.AdViewLayout;
 import com.kyview.AdViewTargeting;
 import com.kyview.AdViewTargeting.RunMode;
 import com.kyview.AdViewTargeting.UpdateMode;
 
+
 import ColorPickerDialog.ColorPickerDialog;
 import android.R.string;
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
@@ -30,6 +40,7 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.Gravity;
@@ -40,6 +51,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +63,11 @@ public class MainActivity extends Activity implements AdViewInterface {
 	Bitmap mCurPageBitmap, mNextPageBitmap;
 	Canvas mCurPageCanvas, mNextPageCanvas;
 	BookPageFactory pagefactory;
+	LinearLayout layout;
+	AdViewLayout adViewLayout;
+	TextView text;
+
+	public static List<Activity> activityList = new ArrayList<Activity>();
 	// 实例化一个handler
 	Handler myHandler   = new Handler(){
 		//接收到消息后处理
@@ -91,75 +108,102 @@ public class MainActivity extends Activity implements AdViewInterface {
 	public void onCreate(Bundle savedInstanceState) {
 
 
-		//              应用Id          应用密码        广告请求间隔(s)   设置测试模式[false为发布模式] 
-		YoumiAdManager.getInstance(this).init("9a5999a6cafdccdc", "473b61f79ead45f3", false);
+		activityList.add(this);
+		 DisplayMetrics dm = new DisplayMetrics();   
+	     getWindowManager().getDefaultDisplay().getMetrics(dm);   
+		//wooboo
+		//WoobooAdView adView = new WoobooAdView(this, 0xFF000000, 0xFFFFFFFF, 40);
+		//adchaina"83587"
+		//AdView adView = new AdView(getApplicationContext(), "83587", true, true);
 
+		//AdManager.setRefershinterval(40);
 
+		//adView.setaHeight(480);
+		//adView.setaHeight(72);	
+		//AdManager.setmVideoPlayer(true);
+		//AdManager.setRelateScreenRotate(this,true);
+
+		//youmi
+		//YoumiAdManager.getInstance(this).init("b2113d5f09dbaa77", "e0aadc51451db4f5", false);
 
 		//初始化广告视图，可以使用其他的构造函数设置广告视图的背景色、透明度及字体颜色
-		AdView adView = new AdView(this, AdSize.SIZE_320x50); 
+		//AdView adView = new AdView(this, AdSize.SIZE_320x50);
+		//domob
+		//DomobAdView adView = new DomobAdView(this,"56OJzqIIuNV6g13yFG", DomobAdView.INLINE_SIZE_320X50);
+		//adView.set
 
 		/*下面两行只用于测试,完成后一定要去掉,参考文挡说明*/
-		AdViewTargeting.setUpdateMode(UpdateMode.EVERYTIME); //保证每次都从服务器取配置
-		AdViewTargeting.setRunMode(RunMode.TEST); //保证所有选中的广告公司都为测试状态
+		//AdViewTargeting.setUpdateMode(UpdateMode.EVERYTIME); //保证每次都从服务器取配置
+		//AdViewTargeting.setRunMode(RunMode.TEST); //保证所有选中的广告公司都为测试状态
 		/*下面这句方便开发者进行发布渠道统计,详细调用可以参考java doc */
 		//AdViewTargeting.setChannel(Channel.GOOGLEMARKET);
-		AdViewLayout adViewLayout = new AdViewLayout(this, "SDK20132313110429qjaqgbtumcnle0x");
+		adViewLayout = new AdViewLayout(this, "SDK20132313110429qjaqgbtumcnle0x");
 		adViewLayout.setAdViewInterface(this);
 
+		FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.FILL_PARENT, 
+				FrameLayout.LayoutParams.WRAP_CONTENT);	 
+		//设置广告出现的位置(悬浮于屏幕右下角)		 
+		params.gravity=Gravity.TOP; 
+		adViewLayout.setLayoutParams(params);
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main);
 		mPageWidget = new PageWidget(this);
+
+		int textLength = 75;
 		TextView text = new TextView(this);
-		text.setText("c++ 面试宝典之面霸");
+		
+		text.setBackgroundColor(Color.rgb(0xEE,0xE8,0xAA));
+		text.setText("cpp面试之面霸");
+		text.setHeight(textLength);
 		text.setGravity(Gravity.CENTER);
-		//text.setShadowLayer(3,1, 1, Color.CYAN);
-		//text.setBackgroundColor(MODE_PRIVATE);
+		text.setTextSize(24);
 
-		//text.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.shelf_bkg));
-		int textLength = 70;
-		text.setHeight(textLength );
+//		LinearLayout lineLayout = new LinearLayout(this);
+//		LinearLayout.LayoutParams lineparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 
+//				textLength);
+//		//lineLayout.addView(text);
+//		lineLayout.setLayoutParams(lineparams);
+//		//lineLayout.addView(adView);
+//		// lineLayout.setBackground( this.getResources().getDrawable(R.drawable.title));
+//		text.setLayoutParams(params);
+		layout = (LinearLayout)findViewById(R.id.main_linear);
+
+		addContentView(adViewLayout, params); 
 
 
-		LinearLayout layout = (LinearLayout)findViewById(R.id.main_linear);
-
-
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 
-				LinearLayout.LayoutParams.WRAP_CONTENT);
-		params.gravity= Gravity.BOTTOM|Gravity.RIGHT;
 		//mPageWidget.setLayoutParams(params1);
 
-		layout.addView(adView);
+		layout.addView(text);
 		//layout.addView(adViewLayout);
 		//this.addContentView(adViewLayout, params);
+		//layout.addView(adViewLayout);
 		layout.addView(mPageWidget);
 
 
-		Log.i("height","height "+adView.getMeasuredWidth()+adView.getHeight());
-		mPageWidget.setScreen(480, 800- textLength);
+
+		mPageWidget.setScreen(dm.widthPixels, dm.heightPixels);
+		mPageWidget.setInitXY(0, textLength);
 
 		//mPageWidget
 		Log.i("size","size "+mPageWidget.getWidth()+" " + mPageWidget.getHeight() );
-		mCurPageBitmap = Bitmap.createBitmap(480, 800- textLength, Bitmap.Config.ARGB_8888);
-		mNextPageBitmap = Bitmap.createBitmap(480, 800- textLength, Bitmap.Config.ARGB_8888);
+		mCurPageBitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels- textLength, Bitmap.Config.ARGB_8888);
+		mNextPageBitmap = Bitmap.createBitmap(dm.widthPixels, dm.heightPixels- textLength, Bitmap.Config.ARGB_8888);
 
 		mCurPageCanvas = new Canvas(mCurPageBitmap);
 		mNextPageCanvas = new Canvas(mNextPageBitmap);
-		pagefactory = new BookPageFactory(480, 800- textLength);
+		pagefactory = new BookPageFactory(dm.widthPixels, dm.heightPixels- textLength);
 
 		pagefactory.setBgBitmap(BitmapFactory.decodeResource(
 				this.getResources(), R.drawable.shelf_bkg));
 
 
 
-
-
 		try {
-			InputStream inputStream = getAssets().open("test.txt");
-			FileOutputStream fos=new FileOutputStream("/sdcard/z8806c.txt");
+			InputStream inputStream = getAssets().open("bkg4.png");
+			FileOutputStream fos=new FileOutputStream("/sdcard/test.png");
 			int data=inputStream.read();
 			while(data!=-1){
 				fos.write(data);
@@ -167,10 +211,10 @@ public class MainActivity extends Activity implements AdViewInterface {
 			}
 			fos.close();
 
-			pagefactory.openbook("/sdcard/z8806c.txt");
+			pagefactory.openbook("/sdcard/test.png");
 			pagefactory.onDraw(mCurPageCanvas);
 		} catch (IOException e1) {
-			Toast.makeText(this, "电子书不存在,请将《z8806c.txt》放在SD卡根目录下,可以超过100M容量",
+			Toast.makeText(this, "电子书不存在",
 					Toast.LENGTH_LONG).show();
 		}
 
@@ -209,7 +253,7 @@ public class MainActivity extends Activity implements AdViewInterface {
 							}
 							pagefactory.onDraw(mNextPageCanvas);
 						}
-						mPageWidget.setBitmaps(mCurPageBitmap, mNextPageBitmap);
+						mPageWidget.setBitmaps(mCurPageBitmap,mNextPageBitmap);
 					}
 
 					ret = mPageWidget.doTouchEvent(e);
@@ -231,7 +275,7 @@ public class MainActivity extends Activity implements AdViewInterface {
 		menu.add(0,0,0, "第一页");
 		menu.add(0,1,0, "字体");
 		menu.add(0,2,0, "颜色");
-		menu.add(0,3,0, "背景");
+		//menu.add(0,3,0, "背景");
 		menu.add(0,4,0, "关于");
 		menu.add(0,5,0, "退出");
 		return true;
@@ -252,13 +296,17 @@ public class MainActivity extends Activity implements AdViewInterface {
 			changeColor(this);
 			break;
 		case 3:
+			//exitProgram();
 			break;
 		case 4:
 			new AlertDialog.Builder(this)
 			.setTitle("关于")
-			.setMessage("destinym")
+			.setMessage("版权所有destiny_m")
 			.setPositiveButton("确定", null)
 			.show();
+			break;
+		case 5:
+			exitProgram();
 			break;
 		}
 		return true;
@@ -272,7 +320,8 @@ public class MainActivity extends Activity implements AdViewInterface {
 
 			public void colorChanged(int color) {
 				pagefactory.setColor(color);
-				pagefactory.onDraw(mCurPageCanvas);			
+				pagefactory.onDraw(mCurPageCanvas);	
+				mPageWidget.invalidate();
 			}
 		});
 		dialog.show();
@@ -299,6 +348,7 @@ public class MainActivity extends Activity implements AdViewInterface {
 				}
 				pagefactory.setTextSize(textSize);
 				pagefactory.onDraw(mCurPageCanvas);
+				mPageWidget.invalidate();
 			}  
 		})   ;
 
@@ -307,9 +357,12 @@ public class MainActivity extends Activity implements AdViewInterface {
 	}
 
 	private void gotoFirstPage()
-	{
+	{		
 		pagefactory.getoFirstPage();
 		pagefactory.onDraw(mCurPageCanvas);
+		mPageWidget.invalidate();
+		mPageWidget.setBitmaps(mCurPageBitmap,mNextPageBitmap);
+		
 
 	}
 
@@ -323,18 +376,42 @@ public class MainActivity extends Activity implements AdViewInterface {
 	private void exitProgram()
 	{
 
+		Builder dialog = new AlertDialog.Builder(this);  
+		dialog.setTitle("是否退出");
+		dialog.setMessage("是否要退出");
+		dialog.setPositiveButton("是", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				Log.d("exit", "----- exitClient -----");         // 关闭所有Activity          
+				for (int i = 0; i < activityList.size(); i++)        
+				{              
+					if (null != activityList.get(i))             
+					{                  
+						activityList.get(i).finish();             
+					}         
+				}
+				//ActivityManager activityManager = (ActivityManager) MainActivity.getSystemService(Context.ACTIVITY_SERVICE);        
+				//activityManager.restartPackage("包路径");          
+				System.exit(0);
+				//Android的程序只是让Activity finish()掉,而单纯的finish掉,退出并不完全
+			}});
+		dialog.setNegativeButton("否", null);
+		dialog.show();
 	}
+
 
 
 	//@Override
 	public void onClickAd() {
 		// TODO Auto-generated method stub
 		Log.i("AdViewSample", "onClickAd");
+
 	}
 
 	//@Override
 	public void onDisplayAd() {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		Log.i("AdViewSample", "onDisplayAd");
 	}
 

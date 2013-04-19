@@ -12,6 +12,7 @@ import android.graphics.PointF;
 import android.graphics.Region;
 import android.graphics.drawable.GradientDrawable;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
@@ -19,9 +20,11 @@ import android.widget.Scroller;
 public class PageWidget extends View {
 
 	private int mWidth = 480;
-	private int mHeight = 700;
+	private int mHeight = 800;
 	private int mCornerX = 0; // 拖拽点对应的页脚
 	private int mCornerY = 0;
+	private int mInitX = 0;
+	private int mInitY = 0;
 	private Path mPath0;
 	private Path mPath1;
 	Bitmap mCurPageBitmap = null; // 当前页
@@ -150,6 +153,8 @@ public class PageWidget extends View {
 	}
 
 	private void calcPoints() {
+
+
 		mMiddleX = (mTouch.x + mCornerX) / 2;
 		mMiddleY = (mTouch.y + mCornerY) / 2;
 		mBezierControl1.x = mMiddleX - (mCornerY - mMiddleY)
@@ -214,6 +219,8 @@ public class PageWidget extends View {
 		mBeziervertex1.y = (2 * mBezierControl1.y + mBezierStart1.y + mBezierEnd1.y) / 4;
 		mBeziervertex2.x = (mBezierStart2.x + 2 * mBezierControl2.x + mBezierEnd2.x) / 4;
 		mBeziervertex2.y = (2 * mBezierControl2.y + mBezierStart2.y + mBezierEnd2.y) / 4;
+		
+
 	}
 
 	/**
@@ -547,6 +554,12 @@ public class PageWidget extends View {
 		if (mCornerX > 0)
 			return false;
 		return true;
+	}
+	
+	public void setInitXY(int x ,int y)
+	{
+		mInitX =0;
+		mInitY =0;
 	}
 
 }

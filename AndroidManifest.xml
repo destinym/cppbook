@@ -15,6 +15,7 @@
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.VIBRATE" />
 
 	<application
 		android:icon="@drawable/ic_launcher"
@@ -30,27 +31,30 @@
 			</intent-filter>
 		</activity>
 
+		<!-- Must declare it for Adivew SDK -->
+		<service android:name="com.kyview.DownloadService" />
+
+		<activity android:name="com.kyview.AdviewWebView" />
+
 		<!-- AdView SDK for AdChina -->
 		<activity
 			android:name="com.adchina.android.ads.views.AdBrowserView"
 			android:configChanges="orientation|keyboard|keyboardHidden"
 			android:theme="@android:style/Theme.Translucent" />
 
-
-		<!-- AdView SDK for AppMedia -->
-		<activity android:name="cn.appmedia.ad.AdActivity" >
-		</activity>
-
 		<!-- AdView SDK for Baidu -->
 		<activity
 			android:name="com.baidu.mobads.AppActivity"
 			android:configChanges="keyboard|keyboardHidden|orientation" />
 
+		<!-- c3228698 -->
 		<meta-data
-			android:name="BaiduMobAd_DEBUG_TOKEN"
-			android:value="adview" />
-
-
+			android:name="BaiduMobAd_APP_ID"
+			android:value="c3228698" />
+		<!-- 您从百度移动联盟网站获取的计费名 -->
+		<meta-data
+			android:name="BaiduMobAd_APP_SEC"
+			android:value="c3228698" />
 
 		<!-- AdView SDK for Youmi -->
 		<activity
@@ -71,8 +75,41 @@
 			</intent-filter>
 		</receiver>
 
+		<!-- dommo -->
+		<activity
+			android:name="cn.domob.android.ads.DomobActivity"
+			android:theme="@android:style/Theme.Translucent" >
+		</activity>
+
+		<!-- wobooo 
+		<activity
+			android:name="com.wooboo.adlib_android.FullActivity"
+			android:configChanges="orientation|keyboardHidden"
+			android:launchMode="singleTask" />
+		<activity
+			android:name="com.wooboo.adlib_android.AdActivity"
+			android:configChanges="orientation|keyboardHidden" />
+
+		<service android:name="com.wooboo.download.WoobooService" >
+			<intent-filter>
+				<action android:name="com.wooboo.WoobooDownloadService" >
+				</action>
+			</intent-filter>
+		</service>
+
+		<meta-data
+			android:name="wooboo_pid"
+			android:value="6ca72ca6b56d4ff3b7c018270041cf7d" />
+		<meta-data
+			android:name="Wooboo_PID"
+			android:value="6ca72ca6b56d4ff3b7c018270041cf7d" />
+		<meta-data
+			android:name="Market_ID"
+			android:value="1" />
+        -->
 		<!-- AdView SDK for greystripe -->
-		
+
+
 		<!--
           supported markets are as follows:
         EOE(优亿市场)
@@ -99,7 +136,7 @@
         AIBALA(爱扒拉市场)
         COOLAPK(酷安网)
         ANFONE(安丰)
-        APKOK(乐致网) 
+        APKOK(乐致网) 
 		-->
 
 	</application>

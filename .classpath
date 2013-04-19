@@ -4,39 +4,12 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/adchina_android_sdk.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/ad-fractalist-sdk-android.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/adlantis.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/adlib_android.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/adOn-3.2.8.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/adtouch-embed-sdk-1.1.0.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/AdViewSDK_Android.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/Adwo_Android_SDK3.1.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/airAD_sdk.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/android-support-v4.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/AppMediaAdAndroidSdk-1.1.0.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/Baidu_MobAds_SDK_Agg_3.0.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/domob_android_sdk.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/GoogleAdMobAdsSdk-6.2.1.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/greystripe-android-sdk-2.0.2.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/immobSDK.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/InMobiAdNetwork_3.6.2.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/InMobiCommons_3.6.2.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/IZPView.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/l_android_adsdk.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/mdotm-sdk-android.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/MMAdView.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/mobisageSDK.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/momark_sdk_v1.4.1.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/smartmad-sdk-android.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/SOMAAndroidSDK2.5.4.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/Tencent_MobWIN_SDK_2.0.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/tinmoo-android-sdkv3.1.0.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/umeng_ad_android_sdk_v1.4.4.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/WiAd.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/WiCommon.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/wqmobile_android_sdk.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/zestadz_sdk_androidv1.2.jar"/>
-	<classpathentry kind="lib" path="E:/workspace/cplusplus/libs/YoumiSdk_Banner_Spot_2013-04-09.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/cplusplustestking/libs/adchina_android_sdk.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/cplusplustestking/libs/adlib_android.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/cplusplustestking/libs/AdViewSDK_Android.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/cplusplustestking/libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/cplusplustestking/libs/Baidu_MobAds_SDK_Agg_3.0.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/cplusplustestking/libs/domob_android_sdk.jar"/>
+	<classpathentry kind="lib" path="E:/workspace/cplusplustestking/libs/youmi-android.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
