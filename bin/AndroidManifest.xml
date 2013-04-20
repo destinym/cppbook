@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.destinym.cplusplustestking"
-	android:versionCode="1"
-	android:versionName="1.0" >
+	android:versionCode="2"
+	android:versionName="1.0.1" >
 
 	<uses-sdk
 		android:minSdkVersion="4"
@@ -35,6 +35,12 @@
 		<service android:name="com.kyview.DownloadService" />
 
 		<activity android:name="com.kyview.AdviewWebView" />
+			<!-- dommo -->
+		<activity
+			android:name="cn.domob.android.ads.DomobActivity"
+			android:theme="@android:style/Theme.Translucent" >
+		</activity>
+		
 
 		<!-- AdView SDK for AdChina -->
 		<activity
@@ -75,11 +81,7 @@
 			</intent-filter>
 		</receiver>
 
-		<!-- dommo -->
-		<activity
-			android:name="cn.domob.android.ads.DomobActivity"
-			android:theme="@android:style/Theme.Translucent" >
-		</activity>
+
 
 		<!-- wobooo 
 		<activity

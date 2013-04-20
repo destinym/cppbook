@@ -11,8 +11,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Region;
 import android.graphics.drawable.GradientDrawable;
-import android.util.FloatMath;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Scroller;
@@ -23,8 +21,7 @@ public class PageWidget extends View {
 	private int mHeight = 800;
 	private int mCornerX = 0; // 拖拽点对应的页脚
 	private int mCornerY = 0;
-	private int mInitX = 0;
-	private int mInitY = 0;
+
 	private Path mPath0;
 	private Path mPath1;
 	Bitmap mCurPageBitmap = null; // 当前页
@@ -556,10 +553,5 @@ public class PageWidget extends View {
 		return true;
 	}
 	
-	public void setInitXY(int x ,int y)
-	{
-		mInitX =0;
-		mInitY =0;
-	}
 
 }

@@ -1,6 +1,7 @@
 package ColorPickerDialog;
 
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -16,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
+@SuppressLint({ "DrawAllocation", "DrawAllocation" })
 public class ColorPickerDialog extends Dialog {
 	private final boolean debug = true;
 	private final String TAG = "ColorPicker";
@@ -56,7 +58,9 @@ public class ColorPickerDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowManager manager = getWindow().getWindowManager();
+		@SuppressWarnings("deprecation")
 		int height = (int) (manager.getDefaultDisplay().getHeight() * 0.5f);
+		@SuppressWarnings("deprecation")
 		int width = (int) (manager.getDefaultDisplay().getWidth() * 0.7f);
 		ColorPickerView myView = new ColorPickerView(context, height, width);
         setContentView(myView);
